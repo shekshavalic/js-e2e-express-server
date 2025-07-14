@@ -35,18 +35,17 @@ steps:
     displayName: 'Run tests'
 
   # Copy project files to artifact staging directory
-  - task: CopyFiles@2
+  - task: ArchiveFiles@2
     inputs:
-      sourceFolder: '$(Build.SourcesDirectory)'
-      contents: |
-        src/**
-        public/**
-      targetFolder: '$(Build.ArtifactStagingDirectory)'
-    displayName: 'Copy project files'
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
 
   # Publish pipeline artifact
   - task: PublishPipelineArtifact@1
     inputs:
       artifactName: 'nodejs-app'
-      targetPath: '$(Build.ArtifactStagingDirectory)'
+      targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     displayName: 'Publish pipeline artifact'
